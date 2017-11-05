@@ -6,7 +6,6 @@ configparser==3.5.0
 enum34==1.1.6
 Flask==0.12.2
 Flask-MySQL==1.4.0
--e git+https://git.heroku.com/gentle-earth-55640.git@409de9d5e96865a8403bf693e342ef6bac5348bb#egg=flaskr&subdirectory=app
 gunicorn==19.7.1
 inflect==0.2.5
 isort==4.2.15
