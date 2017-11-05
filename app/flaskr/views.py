@@ -30,7 +30,7 @@ def delete(id):
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
-	u = User.query.filter(User.id == id).first()
+	u = db_session.query(User).filter_by(id = id).first()
 	if request.method == 'GET':
 		return render_template('edit.html', user=u)
 	else:
@@ -38,6 +38,7 @@ def edit(id):
 		u.lastName = request.form['lastName']
 		u.email = request.form['email']
 		flash('User updated')
+		db_session.commit()
 		return redirect(url_for('index'))
 
 @app.route('/login')
