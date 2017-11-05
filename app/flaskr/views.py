@@ -2,6 +2,7 @@ from flaskr import app
 from flask import Flask, render_template, session, url_for, redirect, flash, request 
 from flaskr.models import User
 from flaskr.database import db_session
+from flaskr.forms import RegistrationForm
 
 @app.route('/')
 def index():
@@ -9,9 +10,8 @@ def index():
 
 @app.route('/new', methods=['GET', 'POST'])
 def new():
-	if request.method == 'GET':
-		return render_template('new.html')
-	else:
+	form = RegistrationForm(request.form)
+	if request.method == 'POST' and form.validate():
 		u = User()
 		u.firstName = request.form['firstName']
 		u.lastName = request.form['lastName']
@@ -20,6 +20,8 @@ def new():
 		db_session.commit()
 		flash('New user created.')
 		return redirect(url_for('index'))
+	else:
+		return render_template('new.html', form = form)
 
 @app.route('/delete/<int:id>')
 def delete(id):
@@ -32,14 +34,19 @@ def delete(id):
 def edit(id):
 	u = db_session.query(User).filter_by(id = id).first()
 	if request.method == 'GET':
-		return render_template('edit.html', user=u)
+		form = RegistrationForm(firstName = u.firstName, lastName = u.lastName, email = u.email)
+		return render_template('edit.html', user = u, form = form)
 	else:
-		u.firstName = request.form['firstName']
-		u.lastName = request.form['lastName']
-		u.email = request.form['email']
-		flash('User updated')
-		db_session.commit()
-		return redirect(url_for('index'))
+		form = RegistrationForm(request.form)
+		if form.validate():
+			u.firstName = request.form['firstName']
+			u.lastName = request.form['lastName']
+			u.email = request.form['email']
+			flash('User updated')
+			db_session.commit()
+			return redirect(url_for('index'))
+		else:
+			return render_template('edit.html', form = form)
 
 @app.route('/login')
 def login():

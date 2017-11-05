@@ -11,6 +11,7 @@
 <body>
     <div class="container">
         <div class=metanav>
+            <a href="{{ url_for('index') }}">Home</a>
             {% if not session.logged_in %}
               <a href="{{ url_for('login') }}">log in</a>
             {% else %}
