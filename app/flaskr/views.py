@@ -7,18 +7,18 @@ from flaskr.database import db_session
 def index():
 	return render_template('index.html', users=User.query.all())
 
-@app.route('/new')
+@app.route('/new', methods=['GET', 'POST'])
 def new():
-	return render_template('new.html')
-
-@app.route('/post', methods=['POST'])
-def post():
-	u = User()
-	u.firstName = request.form['firstName']
-	u.lastName = request.form['lastName']
-	u.email = request.form['email']
-	db_session.add(u)
-	return redirect(url_for('index'))
+	if request.method == 'GET':
+		return render_template('new.html')
+	else:
+		u = User()
+		u.firstName = request.form['firstName']
+		u.lastName = request.form['lastName']
+		u.email = request.form['email']
+		db_session.add(u)
+		flash('New user created.')
+		return redirect(url_for('index'))
 
 @app.route('/delete/<int:id>')
 def delete(id):
@@ -35,6 +35,7 @@ def edit(id):
 		u.firstName = request.form['firstName']
 		u.lastName = request.form['lastName']
 		u.email = request.form['email']
+		flash('User updated')
 		return redirect(url_for('index'))
 
 @app.route('/login')
