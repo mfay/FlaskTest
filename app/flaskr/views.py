@@ -17,6 +17,7 @@ def new():
 		u.lastName = request.form['lastName']
 		u.email = request.form['email']
 		db_session.add(u)
+		db_session.commit()
 		flash('New user created.')
 		return redirect(url_for('index'))
 
@@ -24,6 +25,7 @@ def new():
 def delete(id):
 	u = User.query.filter(User.id == id).first()
 	db_session.delete(u)
+	db_session.commit()
 	return redirect(url_for('index'))
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
